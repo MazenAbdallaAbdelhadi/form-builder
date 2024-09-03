@@ -51,6 +51,7 @@ function Designer() {
       // 1- dropping over designer area
       if (isDesignerButtonElement && isDroppingOverDesignerArea) {
         const type = active?.data?.current?.type;
+
         const newElement = FormElements[type as ElementsType].construct(
           uuidV4()
         );
@@ -172,7 +173,7 @@ export default Designer;
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
-  const { removeElement, selectedElement, setSelectedElement } = useDesigner();
+  const { removeElement, setSelectedElement } = useDesigner();
 
   const topHalf = useDroppable({
     id: element.id + "-top",

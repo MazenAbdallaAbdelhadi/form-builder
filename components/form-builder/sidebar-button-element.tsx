@@ -9,6 +9,7 @@ interface SidebarButtonElementProps {
 
 const SidebarButtonElement = ({ formElement }: SidebarButtonElementProps) => {
   const { label, icon: Icon } = formElement.designerButtonElement;
+
   const draggable = useDraggable({
     id: `designer-btn-${formElement.type}`,
     data: {
