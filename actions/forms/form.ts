@@ -101,3 +101,21 @@ export async function GetFormById(formId: string) {
     },
   });
 }
+
+
+export async function UpdateFormContent(id: string, jsonContent: string){
+  const user = await currentUser();
+  if(!user){
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.update({
+    where:{
+      id: id,
+      userId: user.id,
+    },
+    data:{
+      content: jsonContent
+    }
+  })
+}

@@ -14,8 +14,14 @@ import SaveFormButton from "./save-form-button";
 import PublishFormButton from "./publish-form-button";
 import Designer from "./designer";
 import DragOverlayWrapper from "./drag-overlay-wrapper";
+import { useDesigner } from "../providers/designer-provider";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const FormBuilder = ({ form }: { form: Form }) => {
+  const { setElements } = useDesigner();
+  const [isReady, setIsReady] = useState(false);
+
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 10, // 10px
@@ -31,6 +37,28 @@ const FormBuilder = ({ form }: { form: Form }) => {
 
   const sensors = useSensors(mouseSensor, touchSensor);
 
+  useEffect(() => {
+    if (isReady) return;
+
+    const elements = JSON.parse(form.content);
+
+    setElements(elements);
+
+    const readyTimeout = setTimeout(() => setIsReady(true), 500);
+
+    return () => {
+      clearTimeout(readyTimeout);
+    };
+  }, [form, setElements]);
+
+  if (!isReady) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <Loader2 className="size-12 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <DndContext sensors={sensors}>
       <main className="flex flex-col w-full">
@@ -43,7 +71,7 @@ const FormBuilder = ({ form }: { form: Form }) => {
             <PreviewDialogButton />
             {!form.published && (
               <>
-                <SaveFormButton />
+                <SaveFormButton formId={form.id} />
                 <PublishFormButton />
               </>
             )}
