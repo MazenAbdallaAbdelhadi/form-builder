@@ -7,9 +7,12 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { v4 as uuidV4 } from "uuid";
+import { Trash } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useDesigner } from "@/components/providers/designer-provider";
+import { Button } from "@/components/ui/button";
+
 import DesignerSidebar from "./designer-sidebar";
 import {
   ElementsType,
@@ -17,8 +20,6 @@ import {
   FormElements,
 } from "./form-elements";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Trash } from "lucide-react";
 
 function Designer() {
   const {
