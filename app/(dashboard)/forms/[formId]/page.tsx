@@ -4,7 +4,9 @@ import {
   FormElementInstance,
 } from "@/components/form-builder/form-elements";
 import FormLinkShare from "@/components/form-link-share";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -15,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import VisitButton from "@/components/visit-button";
-import { formatDistance } from "date-fns";
+import { format, formatDistance } from "date-fns";
 import { BookCheck, MousePointerClick, Undo, View } from "lucide-react";
 
 const FormPage = async ({
@@ -163,6 +165,11 @@ async function SubmissionTable({ id }: { id: string }) {
   formElements.forEach((el) => {
     switch (el.type) {
       case "TextField":
+      case "NumberField":
+      case "TextAreaField":
+      case "DateField":
+      case "SelectField":
+      case "CheckboxField":
         columns.push({
           id: el.id,
           label: el.extraAttributes?.label,
@@ -226,10 +233,22 @@ async function SubmissionTable({ id }: { id: string }) {
   );
 }
 
+function RowCell({ type, value }: { type: ElementsType; value: string }) {
+  let node: React.ReactNode = value;
 
-function RowCell({type, value}: {type:ElementsType, value: string}){
-  let node:React.ReactNode = value;
+  switch (type) {
+    case "DateField":
+      if (!value) break;
+      const date = new Date(value);
+      node = <Badge variant={"outline"}>{format(date, "dd/MM/yyyy")}</Badge>;
+      break;
+    case "CheckboxField":
+      const checked = value === "true";
+      node = <Checkbox checked={checked} disabled />;
+      break;
+    default:
+      break;
+  }
 
-  return <TableCell>{node}</TableCell>
-
+  return <TableCell>{node}</TableCell>;
 }
