@@ -156,6 +156,7 @@ export async function SubmitForm(formURL: string, jsonContent: string) {
   return await db.form.update({
     where: {
       shareURL: formURL,
+      published: true,
     },
     data: {
       submissions: {
@@ -166,6 +167,23 @@ export async function SubmitForm(formURL: string, jsonContent: string) {
           content: jsonContent,
         },
       },
+    },
+  });
+}
+
+export async function GetFormWithSubmissions(id: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.findUnique({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+    include: {
+      formSubmissions: true,
     },
   });
 }
