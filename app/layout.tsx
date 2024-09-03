@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import "./globals.css";
 import DesignerContextProvider from "@/components/providers/designer-provider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
     <SessionProvider>
       <html lang="en">
         <body className={inter.className}>
+          <NextTopLoader />
           <DesignerContextProvider>
             <ThemeProvider
               attribute="class"

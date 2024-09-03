@@ -101,7 +101,7 @@ model Form{
   visits Int @default(0)
   submissions Int @default(0)
 
-  shareURL String @default(uuid())
+  shareURL String @default(uuid()) @unique
   formSubmissions FormSubmissions[]
   
   createdAt DateTime @default(now())

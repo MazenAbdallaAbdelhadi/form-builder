@@ -102,25 +102,7 @@ export async function GetFormById(formId: string) {
   });
 }
 
-
-export async function UpdateFormContent(id: string, jsonContent: string){
-  const user = await currentUser();
-  if(!user){
-    throw new UserNotFoundErr();
-  }
-
-  return await db.form.update({
-    where:{
-      id: id,
-      userId: user.id,
-    },
-    data:{
-      content: jsonContent
-    }
-  })
-}
-
-export async function PublishForm(id: string){
+export async function UpdateFormContent(id: string, jsonContent: string) {
   const user = await currentUser();
   if (!user) {
     throw new UserNotFoundErr();
@@ -132,8 +114,58 @@ export async function PublishForm(id: string){
       userId: user.id,
     },
     data: {
-      published: true
+      content: jsonContent,
     },
   });
+}
 
+export async function PublishForm(id: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await db.form.update({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+    data: {
+      published: true,
+    },
+  });
+}
+
+export async function GetFormContentByUrl(formURL: string) {
+  return await db.form.update({
+    select: {
+      content: true,
+    },
+    data: {
+      visits: {
+        increment: 1,
+      },
+    },
+    where: {
+      shareURL: formURL,
+    },
+  });
+}
+
+export async function SubmitForm(formURL: string, jsonContent: string) {
+  return await db.form.update({
+    where: {
+      shareURL: formURL,
+    },
+    data: {
+      submissions: {
+        increment: 1,
+      },
+      formSubmissions: {
+        create: {
+          content: jsonContent,
+        },
+      },
+    },
+  });
 }
